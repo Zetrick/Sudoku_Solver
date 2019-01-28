@@ -1,22 +1,22 @@
-#ifndef SQUARE_H
-#define SQUARE_H
+#ifndef CELL_H
+#define CELL_H
 
 #include <QVector>
 #include <QObject>
 #include <QLineEdit>
 
-class Square : public QObject
+class Cell : public QObject
 {
     Q_OBJECT
 
 public:
-    Square(int assigned_value = 0);
+    Cell(int assigned_value = 0);
 
     QVector<int> get_possible_values() const { return possible_values; }
 
     void set_possible_values(QVector<int> values) { possible_values = values; }
 
-    void add_possible_value(int value) { if(!possible_values.contains(value)) possible_values += value; }
+    void add_possible_value(int value);
 
     bool remove_possible_value(int value);
 
@@ -25,6 +25,8 @@ public:
     QLineEdit * display;
 
     void set_determined_value(int value);
+
+    void remove_determined_value();
 
     int get_determined_value() const { return determined_value; }
 
@@ -36,17 +38,21 @@ public:
 
     int column;
 
-    bool operator==(const Square &rhs);
+    bool has_determined_value;
 
-signals:
-    void determined_value_assigned(int, int);
+    //If this bool is true, it means the determined value will not be changed again.
+    bool determined_value_is_official;
 
-private:
+    bool operator==(const Cell* rhs);
 
-    //Is 0 until a 1-9 value is 100% determined
     int determined_value;
 
     QVector<int> possible_values;
+
+signals:
+    void determined_value_set(int, int, int);
+
+    void determined_value_removed(int, int, int);
 };
 
-#endif // SQUARE_H
+#endif // CELL_H

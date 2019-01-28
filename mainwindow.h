@@ -19,32 +19,42 @@ public:
 private slots:
     void on_pushButton_solve_clicked();
 
-    void press_tab_key(const QString &text);
+    void process_manual_key_press(const QString &text);
+
+    void brute_force_value_changed(const QString &text);
+
+    void on_pushButton_clear_clicked();
+
+    void on_pushButton_load_next_clicked();
 
 private:
     Ui::MainWindow *ui;
 
     Board * gameboard;
 
+    QVector<Board*> more_sudokus;
+
     void format_ui();
-
-    void display_potentials(const Square *square);
-
-    void display_potentials_for_entire_board();
 
     void fill_debug_puzzle();
 
-    //Returns true if the potentials of any square changed
-    bool find_potentials();
-
-    //If a row, column, or quadrant has a square with a sole possibility, fill its determined value
-    //e.g. a square in the top row has '1' listed as a potential and there are no other squares in that row with that potential
-    //assign that square's determined value to '1'
-    void fill_uniques();
-
     //Solves as much of the puzzle as possible
-    void solve_puzzle();
+    void solve_via_brute_force_eliminating_possibles();
 
+    void solve_via_brute_force_every_number();
+
+    //Brute force recursion method, returns true if assignment is valid
+    bool assign_possible_value_to_cell(Cell *cell);
+
+    bool assign_every_value_to_cell(Cell *cell);
+
+    void solve_via_deduction();
+
+    void update_ui_from_board();
+
+    void update_ui_from_board_every_value();
+
+    void set_new_gameboard(Board* board);
 };
 
 #endif // MAINWINDOW_H
